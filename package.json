@@ -1,0 +1,29 @@
+{
+  "name": "ufabc-aulas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caiostoduto/ufabc-aulas.git"
+  },
+  "author": "caiostoduto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caiostoduto/ufabc-aulas/issues"
+  },
+  "homepage": "https://github.com/caiostoduto/ufabc-aulas#readme",
+  "devDependencies": {
+    "@types/node": "^20.8.6",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^39.1.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "typescript": "*"
+  }
+}
