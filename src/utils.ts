@@ -11,14 +11,14 @@ export async function fetch (url: string, config: AxiosRequestConfig = {}): Prom
   return res.data
 }
 
-export async function extractTextsFromPdf (docParams: DocumentInitParameters): Promise<string> {
+export async function extractTextsFromPdf (docParams: DocumentInitParameters): Promise<string[][]> {
   const pdf = await getDocument(docParams).promise
 
-  let txt = ''
+  const txts: string[][] = []
   for (let i = 1; i <= pdf.numPages; i++) {
-    txt += (await (await pdf.getPage(i)).getTextContent())
-      .items.map((item) => (item as TextItem).str).join('')
+    txts.push((await (await pdf.getPage(i)).getTextContent())
+      .items.map((item) => (item as TextItem).str))
   }
 
-  return txt
+  return txts
 }
