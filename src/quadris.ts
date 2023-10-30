@@ -2,12 +2,12 @@ import { fetch, extractTextsFromPdf } from './utils'
 import * as cheerio from 'cheerio'
 import RE2 from 're2'
 
-const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'].reverse()
+const MONTHS = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'].reverse()
 
 export async function fetchQuadris (calendarioAtualURL: URL): Promise<quadri[]> {
-  const txt = await extractTextsFromPdf({
+  const txt = (await extractTextsFromPdf({
     url: calendarioAtualURL.toString()
-  })
+  })).map((txts) => txts.join('')).join('')
 
   const inicios = findInicios(txt)
   const fins = findFins(txt)
@@ -75,7 +75,7 @@ function findInicios (txt: string): Date[] {
 
 function findMonth (txt: string, months: string[]): number {
   for (const month of months) {
-    const re = RE2(month, 'gi')
+    const re = RE2(month, 'g')
     const match = txt.match(re)
 
     if (match !== null) {
@@ -92,7 +92,7 @@ export async function fetchCalendarioAtualURL (calendariosURL: URL): Promise<URL
 
   const calendarioElement = $('a:contains("Calendário de procedimentos administrativo-acadêmicos")')
   if (calendarioElement.length === 0) {
-    throw new Error('Não foi possível encontrar o calendário')
+    throw new Error('Não foi possível encontrar o calendário.')
   }
 
   return new URL(`https://${calendariosURL.host}${calendarioElement.attr('href')}`)
