@@ -1,9 +1,10 @@
 import { fetchCalendarioAtualURL, fetchQuadris, type quadri } from './quadris'
-import { fetchMatriculasAtualURL, fetchMatriculas } from './matriculas'
+import { fetchMatriculaURL, fetchMatriculas } from './matriculas'
 
 class UFABCAulas {
   CALENDARIOS_URL = new URL('https://prograd.ufabc.edu.br/calendarios')
   MATRICULAS_URL = new URL('https://prograd.ufabc.edu.br/matriculas')
+  ANTERIORES_URL = new URL('https://prograd.ufabc.edu.br/matriculas/arquivo')
 
   calendarioAtualURL: URL | undefined
   matriculasAtualURL: URL | undefined
@@ -26,8 +27,10 @@ class UFABCAulas {
   }
 
   async fetchMatriculas (): Promise<UFABCAulas> {
-    this.matriculasAtualURL = await fetchMatriculasAtualURL(
-      this.MATRICULAS_URL)
+    this.matriculasAtualURL = await fetchMatriculaURL(
+      this.MATRICULAS_URL,
+      this.ANTERIORES_URL
+    )
 
     this.matriculas = await fetchMatriculas(this.matriculasAtualURL)
 
