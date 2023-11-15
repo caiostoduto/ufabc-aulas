@@ -19,7 +19,7 @@ function findFins (txt: string): Date[] {
   const re = RE2(/(\d\d?) Conclusão do \dº quadrimestre de 202\d/gi)
   const matches = Array.from(txt.matchAll(re))
   if (matches.length !== 3) {
-    throw new Error('Não foi possível encontrar os inícios das aulas.')
+    throw new Error('Não foi possível encontrar os fins das aulas.')
   }
 
   const dates: Date[] = []
