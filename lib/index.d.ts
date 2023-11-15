@@ -2,6 +2,7 @@ import { type quadri } from './quadris';
 declare class UFABCAulas {
     CALENDARIOS_URL: URL;
     MATRICULAS_URL: URL;
+    ANTERIORES_URL: URL;
     calendarioAtualURL: URL | undefined;
     matriculasAtualURL: URL | undefined;
     turmasAtualURL: URL | undefined;
