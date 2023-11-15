@@ -1,5 +1,4 @@
-import { fetch, extractTextsFromPdf } from './utils'
-import * as cheerio from 'cheerio'
+import { extractTextsFromPdf } from './utils'
 import RE2 from 're2'
 
 const MONTHS = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'].reverse()
@@ -84,18 +83,6 @@ function findMonth (txt: string, months: string[]): number {
   }
 
   throw new Error('Não foi possível encontrar o mês.')
-}
-
-export async function fetchCalendarioAtualURL (calendariosURL: URL): Promise<URL> {
-  const calendaiosHtml = await fetch(calendariosURL.toString())
-  const $ = cheerio.load(calendaiosHtml)
-
-  const calendarioElement = $('a:contains("Calendário de procedimentos administrativo-acadêmicos")')
-  if (calendarioElement.length === 0) {
-    throw new Error('Não foi possível encontrar o calendário.')
-  }
-
-  return new URL(`https://${calendariosURL.host}${calendarioElement.attr('href')}`)
 }
 
 export interface quadri {
