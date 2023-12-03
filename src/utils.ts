@@ -24,26 +24,16 @@ export async function extractTextsFromPdf (docParams: DocumentInitParameters): P
   return txts
 }
 
-export async function findHref (url: URL, contains: string): Promise<[CheerioAPI, URL]> {
-  const html = await fetch(url.toString())
-  const $ = load(html)
+export async function findHref (url: URL, contains: string, $?: CheerioAPI): Promise<[CheerioAPI, URL]> {
+  if ($ === undefined) {
+    const html = await fetch(url.toString())
+    $ = load(html)
+  }
+
   const elements = $(`a:contains("${contains}")`)
   if (elements.length === 0) {
     throw new Error()
   } else {
     return [$, new URL(`https://${url.host}${elements.attr('href') as string}`)]
-  }
-}
-
-export async function fetch$Matriculas (atual: URL, anteriores: URL): Promise<CheerioAPI> {
-  try {
-    return (await findHref(
-      atual, 'Matrículas deferidas após o ajuste')
-    )[0]
-  } catch (e) {
-    return (await findHref(
-      (await findHref(anteriores, ' Quadrimestre de '))[1],
-      'Matrículas deferidas após o ajuste'
-    ))[0]
   }
 }
