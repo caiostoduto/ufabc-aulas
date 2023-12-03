@@ -1,6 +1,6 @@
 import { fetchQuadris, type quadri } from './quadris'
 import { fetchMatriculas } from './matriculas'
-import { fetch$Matriculas, findHref } from './utils'
+import { findHref } from './utils'
 import { type CheerioAPI } from 'cheerio'
 
 class UFABCAulas {
@@ -10,15 +10,14 @@ class UFABCAulas {
 
   calendarioPdfURL: URL | undefined
   matriculasPdfURL: URL | undefined
-  turmasAtualURL: URL | undefined
+  $matriculas: CheerioAPI | undefined
+
   quadris: quadri[] | undefined
   matriculas: Map<string, string[]> | undefined
 
   async fetch (): Promise<UFABCAulas> {
-    const $ = await fetch$Matriculas(this.MATRICULAS_URL, this.ANTERIORES_URL)
-
     await this.fetchQuadris()
-    await this.fetchMatriculas($)
+    await this.fetchMatriculas()
 
     return this
   }
@@ -38,24 +37,32 @@ class UFABCAulas {
     return this
   }
 
-  async fetchMatriculas ($?: CheerioAPI): Promise<UFABCAulas> {
-    if ($ === undefined) {
-      $ = await fetch$Matriculas(
-        this.MATRICULAS_URL, this.ANTERIORES_URL
-      )
-    }
-
-    const elements = $('a:contains("Matrículas deferidas após o ajuste")')
-    if (elements.length === 0) {
-      throw new Error('Não foi possível encontrar as matrículas.')
-    }
-
-    this.matriculasPdfURL = new URL(
-      `https://${this.MATRICULAS_URL.host}${elements.attr('href') as string}`)
+  async fetchMatriculas (): Promise<UFABCAulas> {
+    this.matriculasPdfURL = await this.fetchHrefMatriculas(
+      'Matrículas deferidas após o ajuste')
 
     this.matriculas = await fetchMatriculas(this.matriculasPdfURL)
 
     return this
+  }
+
+  private async fetchHrefMatriculas (contains: string): Promise<URL> {
+    let res
+    try {
+      res = await findHref(
+        this.MATRICULAS_URL,
+        contains,
+        this.$matriculas
+      )
+    } catch (e) {
+      res = await findHref(
+        (await findHref(this.ANTERIORES_URL, ' Quadrimestre de '))[1],
+        contains
+      )
+    }
+
+    this.$matriculas = res[0]
+    return res[1]
   }
 }
 
